@@ -39,6 +39,9 @@
       "@useCases/*": [
         "./src/app/useCases/*"
       ],
+      "@controllers/*": [
+        "./src/app/controllers/*"
+      ],
       "@errors/*": [
         "./src/app/helpers/errors/*"
       ],
