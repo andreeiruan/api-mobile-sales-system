@@ -1,3 +1,4 @@
+import { Cryptography } from '@helpers/Cryptography'
 import { ConflictError } from '@helpers/errors/conflictError'
 import { InvalidParamError } from '@helpers/errors/InvalidParamError'
 import { MissingParamError } from '@helpers/errors/missingParamError'
@@ -34,7 +35,10 @@ export class SignUpUseCase {
         return HttpResponse.conflict(new ConflictError('User by email already exists'))
       }
 
-      const user = this._userRepository.create(data)
+      const hashPassword = await Cryptography.criptPassword(password)
+      const user = await this._userRepository.create({ name, email, password: hashPassword })
+
+      user.password = undefined
 
       return HttpResponse.created(user)
     } catch (error) {
