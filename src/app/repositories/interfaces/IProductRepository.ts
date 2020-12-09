@@ -5,7 +5,7 @@ export interface IProductAttributes{
   userId: string
   name: string
   brand?: string
-  value: number
+  saleValue: number
   amount: number
   createdAt?: Date
   updatedAt?: Date
@@ -13,4 +13,5 @@ export interface IProductAttributes{
 
 export interface IProductRepository{
   create(data: IProductAttributes): Promise<Product>
+  findByUserIdAndName (userId: string, name: string): Promise<Product>
 }

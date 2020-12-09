@@ -17,14 +17,14 @@ export class CreateProductUseCase {
 
   async execute (userId: string, data: IProductAttributes): Promise<IHttpResponse> {
     try {
-      const { name, brand, value, amount } = data
+      const { name, brand, saleValue, amount } = data
 
       if (!name) {
         return HttpResponse.badRequest(new MissingParamError('name'))
       }
 
-      if (!value) {
-        return HttpResponse.badRequest(new MissingParamError('value'))
+      if (!saleValue) {
+        return HttpResponse.badRequest(new MissingParamError('saleValue'))
       }
 
       if (!amount) {
@@ -36,18 +36,22 @@ export class CreateProductUseCase {
         appLogger.logError({ error: 'User not found by id on create product', id: userId })
         return HttpResponse.notFound(new NotFoundError('users'))
       }
+      const productExists = await this._productRepository.findByUserIdAndName(userId, name)
+      if (!productExists) {
+        const productDTO = {
+          userId,
+          name,
+          brand,
+          saleValue,
+          amount
+        }
 
-      const productDTO = {
-        userId,
-        name,
-        brand,
-        value,
-        amount
+        const product = await this._productRepository.create(productDTO)
+
+        return HttpResponse.created(product)
       }
 
-      const product = await this._productRepository.create(productDTO)
-
-      return HttpResponse.created(product)
+      return HttpResponse.noContent()
     } catch (error) {
       appLogger.logError({ error: error.message, filename: __filename })
       return HttpResponse.serverError(new ServerError())

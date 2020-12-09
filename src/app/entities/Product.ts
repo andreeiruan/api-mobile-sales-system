@@ -13,7 +13,7 @@ export class Product {
   brand: string
 
   @Column('float')
-  value: number
+  saleValue: number
 
   @Column('int')
   amount: number
