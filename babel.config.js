@@ -22,6 +22,7 @@ module.exports = {
         "@repositories": "./src/app/repositories",
         "@useCases": "./src/app/useCases",
         "@controllers": "./src/app/controllers",
+        "@middlewares": "./src/app/middlewares",
         "@errors": "./src/app/helpers/errors",
         "@app": "./src/app",
       }

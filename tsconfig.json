@@ -42,6 +42,9 @@
       "@controllers/*": [
         "./src/app/controllers/*"
       ],
+      "@middlewares/*": [
+        "./src/app/middlewares/*"
+      ],
       "@errors/*": [
         "./src/app/helpers/errors/*"
       ],
