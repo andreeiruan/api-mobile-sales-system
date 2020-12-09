@@ -22,7 +22,7 @@ export class createProducts1607521119305 implements MigrationInterface {
           type: 'varchar'
         },
         {
-          name: 'value',
+          name: 'saleValue',
           type: 'float',
           isNullable: false
         },
