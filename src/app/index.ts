@@ -1,5 +1,7 @@
 import express from 'express'
+import morgan from 'morgan'
 import { AppRouter } from './routes'
+
 import 'dotenv/config'
 
 import '../database/connect'
@@ -20,6 +22,7 @@ class Application {
       return next()
     })
     this.app.use(express.json())
+    this.app.use(morgan('dev'))
     this.app.use('/api', this._router)
   }
 }

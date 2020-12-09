@@ -1,6 +1,6 @@
 export class NotAuthorizedError extends Error {
-  constructor (message: string) {
-    super(`Not Authorized: ${message}`)
+  constructor () {
+    super('Not Authorized')
     this.name = 'NotAuthorizedError'
   }
 }
