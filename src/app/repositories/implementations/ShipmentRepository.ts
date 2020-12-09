@@ -1,6 +1,7 @@
 import { Product } from '@entities/Product'
 import { Shipment } from '@entities/Shipment'
 import { ShipmentProduct } from '@entities/ShipmentProduct'
+import { appLogger } from '@helpers/Logger'
 import { IShipmentAttributes } from '@repositories/interfaces/IShipmentRepository'
 import { getRepository, getConnection } from 'typeorm'
 
@@ -40,6 +41,8 @@ export class ShipmentRepostory {
       return shipment
     } catch (error) {
       await queryRunner.rollbackTransaction()
+      appLogger.logError({ error: error.message, filename: __filename })
+      throw new Error('Transaction of shipment has failed')
     }
   }
 }
