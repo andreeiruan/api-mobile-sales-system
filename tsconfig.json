@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "es2017",
     "module": "commonjs",
     "lib": [
       "es6"
@@ -22,22 +22,28 @@
     "baseUrl": ".",
     "paths": {
       "@entities/*": [
-        "./src/entities/*"
+        "./src/app/entities/*"
       ],
       "@config/*": [
         "./src/config/*"
       ],
       "@helpers/*": [
-        "./src/helpers/*"
+        "./src/app/helpers/*"
       ],
       "@providers/*": [
-        "./src/providers/*"
+        "./src/app/providers/*"
       ],
       "@repositories/*": [
-        "./src/repositories/*"
+        "./src/app/repositories/*"
       ],
       "@useCases/*": [
-        "./src/useCases/*"
+        "./src/app/useCases/*"
+      ],
+      "@errors/*": [
+        "./src/app/helpers/errors/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
       ],
     }
   },
