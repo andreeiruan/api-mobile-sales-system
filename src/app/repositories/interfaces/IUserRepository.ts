@@ -11,4 +11,5 @@ export interface IUserAttributes{
 export interface IUserRepository{
   create(data: IUserAttributes): Promise<User>
   findByEmail(email: string): Promise<User>
+  findById(id: string): Promise<User>
 }
