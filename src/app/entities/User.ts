@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Product } from './Product'
 
 @Entity('users')
 export class User {
@@ -13,6 +14,9 @@ export class User {
 
   @Column('varchar')
   password: string
+
+  @OneToMany(() => Product, product => product.userId)
+  products: Product[]
 
   @CreateDateColumn()
   createdAt: Date
