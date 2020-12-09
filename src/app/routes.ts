@@ -1,7 +1,7 @@
-import { SignInControllerExpress } from '@controllers/SignInControllerExpress'
+import { SignInControllerExpress } from '@controllers/users/SignInControllerExpress'
 import { signInUseCase, signUpUseCase } from '@useCases/users'
 import { Router } from 'express'
-import { SignUpUseControllerExpress } from '../app/controllers/SignUpControllerExpress'
+import { SignUpUseControllerExpress } from '@controllers/users/SignUpControllerExpress'
 
 export class AppRouter {
   public readonly routes: Router
