@@ -15,7 +15,7 @@ export class ProductRepository implements IProductRepository {
   async findByUserIdAndName (userId: string, name: string): Promise<Product> {
     const repository = getRepository(Product)
 
-    const productExists = await repository.findOne({ where: [{ userId: userId }, { name: name }] })
+    const productExists = await repository.findOne({ where: { userId: userId, name: name } })
 
     return productExists
   }
