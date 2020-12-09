@@ -2,7 +2,9 @@ import { Cryptography } from '@helpers/Cryptography'
 import { ConflictError } from '@helpers/errors/conflictError'
 import { InvalidParamError } from '@helpers/errors/InvalidParamError'
 import { MissingParamError } from '@helpers/errors/missingParamError'
+import { ServerError } from '@helpers/errors/serverError'
 import { HttpResponse, IHttpResponse } from '@helpers/HttpResponse'
+import { appLogger } from '@helpers/Logger'
 import { IUserAttributes, IUserRepository } from '@repositories/interfaces/IUserRepository'
 
 export class SignUpUseCase {
@@ -42,7 +44,8 @@ export class SignUpUseCase {
 
       return HttpResponse.created(user)
     } catch (error) {
-      return HttpResponse.serverError(error)
+      appLogger.logError({ error: error.message, filename: __filename })
+      return HttpResponse.serverError(new ServerError())
     }
   }
 }

@@ -1,3 +1,4 @@
+import { appLogger } from '@helpers/Logger'
 import { SignUpUseCase } from '@useCases/users/SignUpUseCase'
 import { Request, Response } from 'express'
 
@@ -14,6 +15,7 @@ export class SignUpUseControllerExpress {
       const { body, statusCode } = await this._signUpUseCase.execute({ name, email, password, confirmPassword })
       return response.status(statusCode).json(body)
     } catch (error) {
+      appLogger.logError({ error: error.message, path: request.path })
       return response.status(500).json({ error: 'Unexpected error' })
     }
   }

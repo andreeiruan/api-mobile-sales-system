@@ -4,6 +4,7 @@ import { NotAuthorizedError } from '@helpers/errors/NotAuthorizedError'
 import { NotFoundError } from '@helpers/errors/notFoundError'
 import { ServerError } from '@helpers/errors/serverError'
 import { HttpResponse, IHttpResponse } from '@helpers/HttpResponse'
+import { appLogger } from '@helpers/Logger'
 import { IUserRepository } from '@repositories/interfaces/IUserRepository'
 
 interface ISignInDTO{
@@ -48,6 +49,7 @@ export class SignInUseCase {
         token
       })
     } catch (error) {
+      appLogger.logError({ error: error.message, filename: __filename })
       return HttpResponse.serverError(new ServerError())
     }
   }
