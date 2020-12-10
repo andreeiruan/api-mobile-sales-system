@@ -11,6 +11,8 @@ import { ListShipmentControllerExpress } from '@controllers/shipment/ListShipmen
 import { ShowShipmentControllerExpress } from '@controllers/shipment/ShowShipmentControllerExpress'
 import { ShowProductControllerExpress } from '@controllers/products/ShowProductControllerExpress'
 import { ListProductsControllerExpress } from '@controllers/products/ListProductsControllerExpress'
+import { CreateSaleControllerExpress } from '@controllers/sales/CreateSaleControllerExpress'
+import { createSaleUseCase } from '@useCases/sales'
 
 export class AppRouter {
   public readonly routes: Router
@@ -20,6 +22,7 @@ export class AppRouter {
     this._routerUsers()
     this._routerProducts()
     this._routerShipment()
+    this._routerSales()
   }
 
   private _routerUsers () {
@@ -37,5 +40,9 @@ export class AppRouter {
     this.routes.post('/shipments', auth, (req, res) => new ShipmentBuyControllerExpress(shipmentBuyUseCase).handle(req, res))
     this.routes.get('/shipments', auth, (req, res) => new ListShipmentControllerExpress(listShipmentUseCase).handle(req, res))
     this.routes.get('/shipments/:id', auth, (req, res) => new ShowShipmentControllerExpress(showShipmentUseCase).handle(req, res))
+  }
+
+  private _routerSales () {
+    this.routes.post('/sales', auth, (req, res) => new CreateSaleControllerExpress(createSaleUseCase).handle(req, res))
   }
 }
