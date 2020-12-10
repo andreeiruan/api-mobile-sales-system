@@ -3,10 +3,11 @@ import { signInUseCase, signUpUseCase } from '@useCases/users'
 import { Router } from 'express'
 import { SignUpUseControllerExpress } from '@controllers/users/SignUpControllerExpress'
 import { CreateProductControllerExpress } from '@controllers/products/CreateProductControllerExpress'
-import { createProductUseCase } from '@useCases/products'
+import { createProductUseCase, listProductUseCase } from '@useCases/products'
 import auth from '@middlewares/authentication'
 import { ShipmentBuyControllerExpress } from '@controllers/shipment/shipmentBuyControllerExpress'
-import { shipmentBuyUseCase } from '@useCases/shipmentBuy'
+import { shipmentBuyUseCase } from '@useCases/shipment'
+import { ListProductsControllerExpress } from '@controllers/products/ListProductsControllerExpress'
 
 export class AppRouter {
   public readonly routes: Router
@@ -25,6 +26,7 @@ export class AppRouter {
 
   private _routerProducts () {
     this.routes.post('/products', auth, (req, res) => new CreateProductControllerExpress(createProductUseCase).handle(req, res))
+    this.routes.get('/products', auth, (req, res) => new ListProductsControllerExpress(listProductUseCase).handle(req, res))
   }
 
   private _routerShipment () {
