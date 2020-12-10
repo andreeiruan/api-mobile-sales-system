@@ -3,4 +3,4 @@ dist
 .env
 .env.test
 __tests__
-app.log
+*.log
