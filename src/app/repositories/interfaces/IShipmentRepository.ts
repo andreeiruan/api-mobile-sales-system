@@ -6,11 +6,6 @@ interface IProductShipmentDTO{
   amount: number
 }
 
-interface IAddStockUseCaseDTO{
-  userId: string
-  provider: string
-}
-
 export interface IShipmentAttributes{
   id?: string
   products: IProductShipmentDTO[]
@@ -23,4 +18,5 @@ export interface IShipmentAttributes{
 
 export interface IShipmentRepository{
   create(data: IShipmentAttributes): Promise<Shipment>
+  listMonthByUserId(userId:string, month?: number): Promise<Shipment[]>
 }

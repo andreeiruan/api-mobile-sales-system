@@ -2,10 +2,15 @@ import { Product } from '@entities/Product'
 import { Shipment } from '@entities/Shipment'
 import { ShipmentProduct } from '@entities/ShipmentProduct'
 import { appLogger } from '@helpers/Logger'
-import { IShipmentAttributes } from '@repositories/interfaces/IShipmentRepository'
-import { getConnection } from 'typeorm'
+import { IShipmentAttributes, IShipmentRepository } from '@repositories/interfaces/IShipmentRepository'
+import { getConnection, getRepository } from 'typeorm'
 
-export class ShipmentRepostory {
+interface IPeriod{
+  initial: Date
+  end: Date
+}
+
+export class ShipmentRepostory implements IShipmentRepository {
   async create (data: IShipmentAttributes): Promise<Shipment> {
     const connection = getConnection()
 
@@ -52,5 +57,32 @@ export class ShipmentRepostory {
     } finally {
       await queryRunner.commitTransaction()
     }
+  }
+
+  private getPeriod (m: number): IPeriod {
+    let date: any = new Date().setMonth(m)
+    date = new Date(date)
+    const initial = new Date(date.getFullYear(), date.getMonth(), 1)
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+
+    return {
+      initial,
+      end
+    }
+  }
+
+  async listMonthByUserId (userId:string, month: number): Promise<Shipment[]> {
+    const { initial, end } = this.getPeriod(month)
+
+    const repository = getRepository(Shipment)
+
+    const shipments = await repository.createQueryBuilder('shipments')
+      .select()
+      .where('shipments.userId = :id', { id: userId })
+      .andWhere('shipments.createdAt >= :initial', { initial: initial })
+      .andWhere('shipments.createdAt <= :end', { end: end })
+      .execute()
+
+    return shipments
   }
 }
