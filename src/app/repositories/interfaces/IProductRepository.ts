@@ -14,5 +14,6 @@ export interface IProductAttributes{
 export interface IProductRepository{
   create(data: IProductAttributes): Promise<Product>
   findByUserIdAndName (userId: string, name: string): Promise<Product>
+  findById (id: string): Promise<Product>
   listProducts(userId:string, name?: string): Promise<Product[]>
 }

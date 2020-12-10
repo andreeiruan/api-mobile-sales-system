@@ -27,4 +27,12 @@ export class ProductRepository implements IProductRepository {
 
     return products
   }
+
+  async findById (id: string): Promise<Product> {
+    const repository = getRepository(Product)
+
+    const product = await repository.findOne({ where: { id } })
+
+    return product
+  }
 }
