@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Product } from './Product'
+import { SalesProducts } from './SaleProducts'
 
 @Entity('users')
 export class User {
@@ -17,6 +18,9 @@ export class User {
 
   @OneToMany(() => Product, product => product.userId)
   products: Product[]
+
+  @OneToMany(() => SalesProducts, salesProducts => salesProducts.user)
+  salesProducts: SalesProducts[]
 
   @CreateDateColumn()
   createdAt: Date
