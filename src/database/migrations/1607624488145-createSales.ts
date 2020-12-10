@@ -24,8 +24,7 @@ export class createSales1607624488145 implements MigrationInterface {
         },
         {
           name: 'discount',
-          type: 'int',
-          isNullable: false
+          type: 'float'
         },
         {
           name: 'userId',

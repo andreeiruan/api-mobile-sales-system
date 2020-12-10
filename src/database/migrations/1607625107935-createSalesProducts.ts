@@ -19,8 +19,7 @@ export class createSalesProducts1607625107935 implements MigrationInterface {
         },
         {
           name: 'discountUnitary',
-          type: 'float',
-          isNullable: false
+          type: 'float'
         },
         {
           name: 'amount',
