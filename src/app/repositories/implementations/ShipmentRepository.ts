@@ -85,4 +85,15 @@ export class ShipmentRepostory implements IShipmentRepository {
 
     return shipments
   }
+
+  async findById (id: string): Promise<Shipment> {
+    const repository = getRepository(Shipment)
+
+    const shipment = await repository.findOne({
+      where: { id },
+      join: { alias: 'shipments', innerJoinAndSelect: { sp: 'shipments.shipmentProducts' } }
+    })
+
+    return shipment
+  }
 }

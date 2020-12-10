@@ -5,10 +5,11 @@ import { SignUpUseControllerExpress } from '@controllers/users/SignUpControllerE
 import { CreateProductControllerExpress } from '@controllers/products/CreateProductControllerExpress'
 import { createProductUseCase, listProductUseCase } from '@useCases/products'
 import auth from '@middlewares/authentication'
-import { ShipmentBuyControllerExpress } from '@controllers/shipment/shipmentBuyControllerExpress'
-import { listShipmentUseCase, shipmentBuyUseCase } from '@useCases/shipment'
+import { ShipmentBuyControllerExpress } from '@controllers/shipment/shipmentBuyControllerExpress copy'
+import { listShipmentUseCase, shipmentBuyUseCase, showShipmentUseCase } from '@useCases/shipment'
 import { ListProductsControllerExpress } from '@controllers/products/ListProductsControllerExpress'
 import { ListShipmentControllerExpress } from '@controllers/shipment/ListShipmentControllerExpress'
+import { ShowShipmentControllerExpress } from '@controllers/shipment/ShowShipmentControllerExpress'
 
 export class AppRouter {
   public readonly routes: Router
@@ -33,5 +34,6 @@ export class AppRouter {
   private _routerShipment () {
     this.routes.post('/shipments', auth, (req, res) => new ShipmentBuyControllerExpress(shipmentBuyUseCase).handle(req, res))
     this.routes.get('/shipments', auth, (req, res) => new ListShipmentControllerExpress(listShipmentUseCase).handle(req, res))
+    this.routes.get('/shipments/:id', auth, (req, res) => new ShowShipmentControllerExpress(showShipmentUseCase).handle(req, res))
   }
 }

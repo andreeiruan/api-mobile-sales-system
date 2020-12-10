@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { ShipmentProduct } from './ShipmentProduct'
 import { User } from './User'
 
 @Entity('products')
@@ -20,6 +21,9 @@ export class Product {
 
   @Column('uuid')
   userId: string
+
+  @OneToMany(() => ShipmentProduct, shipmentProduct => shipmentProduct.product)
+  shipmentProducts: ShipmentProduct[]
 
   @ManyToOne(() => User)
   user: User

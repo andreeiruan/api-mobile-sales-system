@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Product } from './Product'
 import { Shipment } from './Shipment'
 import { User } from './User'
@@ -11,7 +11,8 @@ export class ShipmentProduct {
   @Column('uuid')
   shipmentId: string
 
-  @ManyToOne(() => Shipment, shipment => shipment.id)
+  @JoinColumn({ name: 'shipmentId' })
+  @ManyToOne(() => Shipment, shipment => shipment.shipmentProducts)
   shipment: Shipment
 
   @Column('uuid')
@@ -23,7 +24,8 @@ export class ShipmentProduct {
   @Column('uuid')
   productId: string
 
-  @ManyToOne(() => Product, product => product.id)
+  @JoinColumn({ name: 'productId' })
+  @ManyToOne(() => Product, product => product.shipmentProducts)
   product: Product
 
   @Column('float')

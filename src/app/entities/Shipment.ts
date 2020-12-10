@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { ShipmentProduct } from './ShipmentProduct'
 import { User } from './User'
 
 @Entity('shipments')
@@ -11,6 +12,9 @@ export class Shipment {
 
   @ManyToOne(() => User)
   user: User
+
+  @OneToMany(() => ShipmentProduct, shipment => shipment.shipment)
+  shipmentProducts: ShipmentProduct[]
 
   @Column('float')
   amountValue: number
