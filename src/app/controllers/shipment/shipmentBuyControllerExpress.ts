@@ -1,5 +1,5 @@
 import { appLogger } from '@helpers/Logger'
-import { ShipmentBuyUseCase } from '@useCases/shipmentBuy/ShipmentBuyUseCase'
+import { ShipmentBuyUseCase } from '@useCases/shipment/ShipmentBuyUseCase'
 import { Request, Response } from 'express'
 
 export class ShipmentBuyControllerExpress {

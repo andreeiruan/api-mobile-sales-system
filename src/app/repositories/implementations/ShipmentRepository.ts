@@ -3,46 +3,54 @@ import { Shipment } from '@entities/Shipment'
 import { ShipmentProduct } from '@entities/ShipmentProduct'
 import { appLogger } from '@helpers/Logger'
 import { IShipmentAttributes } from '@repositories/interfaces/IShipmentRepository'
-import { getRepository, getConnection } from 'typeorm'
+import { getConnection } from 'typeorm'
 
 export class ShipmentRepostory {
   async create (data: IShipmentAttributes): Promise<Shipment> {
     const connection = getConnection()
+
     const queryRunner = connection.createQueryRunner()
 
     const { userId, amountValue, provider, products } = data
 
     try {
       await queryRunner.startTransaction()
+      const shipment = queryRunner.manager.create(Shipment, { userId, amountValue, provider })
+      await queryRunner.manager.save(shipment)
 
-      const shipmentRepository = getRepository(Shipment)
-      const shipment = shipmentRepository.create({ userId, amountValue, provider })
-      await shipmentRepository.save(shipment)
+      for (const p of products) {
+        const product = await queryRunner.manager.findOne(Product, { where: { id: p.id } })
+        await queryRunner.manager.getRepository(Product)
+          .createQueryBuilder('products')
+          .update({ amount: product.amount + p.amount })
+          .where('products.id = :id', { id: p.id })
+          .useTransaction(true)
+          .execute()
 
-      const shipmentsProductsRepository = getRepository(ShipmentProduct)
-      const productRepository = getRepository(Product)
-
-      products.forEach(async p => {
-        const product = await productRepository.findOne({ where: { id: p.id } })
-        await productRepository.update(p.id, { amount: product.amount + p.amount })
-        const s = shipmentsProductsRepository.create({
-          shipmentId: shipment.id,
-          userId,
-          productId: p.id,
-          unitaryValue: p.unitaryValue,
-          amount: p.amount
-        })
-
-        await shipmentsProductsRepository.save(s)
-      })
-
-      await queryRunner.commitTransaction()
+        await queryRunner.manager.getRepository(ShipmentProduct)
+          .createQueryBuilder('shipmentsProducts')
+          .insert()
+          .into(ShipmentProduct)
+          .values(
+            {
+              userId: userId,
+              shipmentId: shipment.id,
+              productId: p.id,
+              unitaryValue: p.unitaryValue,
+              amount: p.amount
+            }
+          )
+          .useTransaction(true)
+          .execute()
+      }
 
       return shipment
     } catch (error) {
       await queryRunner.rollbackTransaction()
       appLogger.logError({ error: error.message, filename: __filename })
       throw new Error('Transaction of shipment has failed')
+    } finally {
+      await queryRunner.commitTransaction()
     }
   }
 }
