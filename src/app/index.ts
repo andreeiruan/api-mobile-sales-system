@@ -1,7 +1,8 @@
 import 'reflect-metadata'
 import express from 'express'
 import morgan from 'morgan'
-import { AppRouter } from './routes'
+import { routerProducts, routerSales, routerShipment, routerUser } from './routes'
+import cluster from './middlewares/cluster'
 
 import 'dotenv/config'
 
@@ -9,12 +10,11 @@ import '../database/connect'
 
 class Application {
   public readonly app: express.Application
-  private readonly _router: express.Router
 
-  constructor (router: express.Router) {
+  constructor () {
     this.app = express()
-    this._router = router
     this._middlewares()
+    this._routes()
   }
 
   private _middlewares () {
@@ -24,10 +24,15 @@ class Application {
     })
     this.app.use(express.json())
     this.app.use(morgan('dev'))
-    this.app.use('/api', this._router)
+    this.app.use(cluster)
+  }
+
+  private _routes () {
+    this.app.use('/api', routerUser)
+    this.app.use('/api', routerProducts)
+    this.app.use('/api', routerShipment)
+    this.app.use('/api', routerSales)
   }
 }
 
-const router = new AppRouter()
-
-export default new Application(router.routes).app
+export default new Application().app

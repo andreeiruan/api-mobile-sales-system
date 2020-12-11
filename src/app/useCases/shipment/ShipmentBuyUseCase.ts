@@ -46,6 +46,7 @@ export class ShipmentBuyUseCase {
         .reduce((s, n) => s + n)
 
       const shipment = await this._shipmentRepository.create({ userId, amountValue, provider, products })
+      // const shipment = { userId, amountValue, provider, products }
 
       return HttpResponse.created(shipment)
     } catch (error) {

@@ -29,6 +29,7 @@ export class createProducts1607521119305 implements MigrationInterface {
         {
           name: 'amount',
           type: 'int',
+          default: 0,
           isNullable: false
         },
         {

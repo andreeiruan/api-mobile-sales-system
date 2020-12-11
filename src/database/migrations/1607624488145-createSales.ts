@@ -27,6 +27,14 @@ export class createSales1607624488145 implements MigrationInterface {
           type: 'float'
         },
         {
+          name: 'confirmPay',
+          type: 'boolean'
+        },
+        {
+          name: 'nameCliente',
+          type: 'varchar'
+        },
+        {
           name: 'userId',
           type: 'uuid',
           isNullable: false

@@ -40,7 +40,7 @@
         "./src/app/useCases/*"
       ],
       "@controllers/*": [
-        "./src/app/controllers/*"
+        "src/app/controllers/*"
       ],
       "@middlewares/*": [
         "./src/app/middlewares/*"

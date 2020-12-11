@@ -17,7 +17,7 @@ export class CreateProductUseCase {
 
   async execute (userId: string, data: IProductAttributes): Promise<IHttpResponse> {
     try {
-      const { name, brand, saleValue, amount } = data
+      const { name, brand, saleValue } = data
 
       if (!name) {
         return HttpResponse.badRequest(new MissingParamError('name'))
@@ -25,10 +25,6 @@ export class CreateProductUseCase {
 
       if (!saleValue) {
         return HttpResponse.badRequest(new MissingParamError('saleValue'))
-      }
-
-      if (!amount) {
-        return HttpResponse.badRequest(new MissingParamError('amount'))
       }
 
       const userExists = await this._userRepository.findById(userId)
@@ -43,7 +39,7 @@ export class CreateProductUseCase {
           name,
           brand,
           saleValue,
-          amount
+          amount: 0
         }
 
         const product = await this._productRepository.create(productDTO)

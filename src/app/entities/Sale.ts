@@ -18,6 +18,12 @@ export class Sale {
   @Column('uuid')
   userId: string
 
+  @Column('boolean')
+  confirmPay: boolean
+
+  @Column('varchar')
+  nameCliente: string
+
   @OneToMany(() => SalesProducts, salesProducts => salesProducts.sale)
   salesProducts: SalesProducts[]
 

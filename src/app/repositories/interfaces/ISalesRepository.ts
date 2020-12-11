@@ -13,10 +13,13 @@ export interface ISalesAttributes{
   saleTotal?: number
   discount?: number
   userId: string
+  confirmPay: boolean
+  nameCliente: string
   createdAt?: Date
   updatedAt?: Date
 }
 
 export interface ISalesRepository{
   create(data: ISalesAttributes): Promise<Sale>
+  listMonthByUserId(userId:string, month?: number): Promise<Sale[]>
 }
