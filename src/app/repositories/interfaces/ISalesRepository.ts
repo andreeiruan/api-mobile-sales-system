@@ -22,4 +22,5 @@ export interface ISalesAttributes{
 export interface ISalesRepository{
   create(data: ISalesAttributes): Promise<Sale>
   listMonthByUserId(userId:string, month?: number): Promise<Sale[]>
+  findById(id: string): Promise<Sale>
 }

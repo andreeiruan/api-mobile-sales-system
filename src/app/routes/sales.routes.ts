@@ -1,5 +1,5 @@
 import { appLogger } from '@helpers/Logger'
-import { createSaleUseCase, listSaleUseCase } from '@useCases/sales'
+import { createSaleUseCase, listSaleUseCase, showSaleUseCase } from '@useCases/sales'
 import { Router } from 'express'
 import auth from '../middlewares/authentication'
 
@@ -16,11 +16,23 @@ routerSales.post('/sales', auth, async (request, response) => {
     return response.status(500).json({ error: 'Unexpected error' })
   }
 })
+
 routerSales.get('/sales', auth, async (request, response) => {
   try {
     const userId = request.loggedId
     const { month } = request.query
     const { statusCode, body } = await listSaleUseCase.execute(userId, Number(month) - 1)
+    return response.status(statusCode).json(body)
+  } catch (error) {
+    appLogger.logError({ error: error.message, path: request.path })
+    return response.status(500).json({ error: 'Unexpected error' })
+  }
+})
+
+routerSales.get('/sales/:id', auth, async (request, response) => {
+  try {
+    const { id } = request.params
+    const { body, statusCode } = await showSaleUseCase.execute(id)
     return response.status(statusCode).json(body)
   } catch (error) {
     appLogger.logError({ error: error.message, path: request.path })

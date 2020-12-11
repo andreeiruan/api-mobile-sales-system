@@ -86,4 +86,15 @@ export class SaleRepository implements ISalesRepository {
 
     return sales
   }
+
+  async findById (id: string): Promise<Sale> {
+    const repository = getRepository(Sale)
+
+    const sale = await repository.findOne({
+      where: { id },
+      join: { alias: 'sales', innerJoinAndSelect: { sp: 'sales.salesProducts' } }
+    })
+
+    return sale
+  }
 }
