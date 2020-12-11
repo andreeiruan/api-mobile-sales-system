@@ -1,8 +1,9 @@
 import 'reflect-metadata'
 import express from 'express'
+import compression from 'compression'
 import morgan from 'morgan'
 import { routerProducts, routerSales, routerShipment, routerUser } from './routes'
-import cluster from './middlewares/cluster'
+// import cluster from './middlewares/cluster'
 
 import 'dotenv/config'
 
@@ -23,8 +24,9 @@ class Application {
       return next()
     })
     this.app.use(express.json())
+    this.app.use(compression())
     this.app.use(morgan('dev'))
-    this.app.use(cluster)
+    // this.app.use(cluster)
   }
 
   private _routes () {

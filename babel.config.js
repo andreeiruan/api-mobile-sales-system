@@ -30,6 +30,7 @@ module.exports = {
   ],
   ignore: [
     '**/*.spec.ts',
-    'src/database/migrations/*.ts'
+    'src/database/migrations/*.ts',
+    '*.log'
   ]
 }

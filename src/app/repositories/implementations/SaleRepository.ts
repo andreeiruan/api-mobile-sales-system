@@ -56,6 +56,7 @@ export class SaleRepository implements ISalesRepository {
       throw new Error('Transaction of shipment has failed')
     } finally {
       await queryRunner.commitTransaction()
+      await queryRunner.release()
     }
   }
 

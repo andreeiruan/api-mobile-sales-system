@@ -32,6 +32,7 @@ export class ShipmentBuyUseCase {
   async execute (data: IShipmentOfBuyDTO): Promise<IHttpResponse> {
     try {
       const { userId, products, provider } = data
+
       const userExists = await this._userRepository.findById(userId)
       if (!userExists) {
         appLogger.logError({ error: 'User not found by id', filename: __filename, id: userId })
@@ -46,7 +47,6 @@ export class ShipmentBuyUseCase {
         .reduce((s, n) => s + n)
 
       const shipment = await this._shipmentRepository.create({ userId, amountValue, provider, products })
-      // const shipment = { userId, amountValue, provider, products }
 
       return HttpResponse.created(shipment)
     } catch (error) {
