@@ -5,6 +5,7 @@ import { MissingParamError } from '@helpers/errors/missingParamError'
 import { ServerError } from '@helpers/errors/serverError'
 import { HttpResponse, IHttpResponse } from '@helpers/HttpResponse'
 import { appLogger } from '@helpers/Logger'
+import { Queue } from '@providers/Queue'
 import { IUserAttributes, IUserRepository } from '@repositories/interfaces/IUserRepository'
 
 export class SignUpUseCase {
@@ -41,6 +42,8 @@ export class SignUpUseCase {
       const user = await this._userRepository.create({ name, email, password: hashPassword })
 
       user.password = undefined
+
+      await Queue.instance().add('UserSignUp', { email, name })
 
       return HttpResponse.created(user)
     } catch (error) {

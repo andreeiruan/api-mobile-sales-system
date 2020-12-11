@@ -3,17 +3,20 @@ import express from 'express'
 import compression from 'compression'
 import morgan from 'morgan'
 import { routerProducts, routerSales, routerShipment, routerUser } from './routes'
+import Bullboard from 'bull-board'
 // import cluster from './middlewares/cluster'
 
 import 'dotenv/config'
 
 import '../database/connect'
+import { Queue } from '@providers/Queue'
 
 class Application {
   public readonly app: express.Application
 
   constructor () {
     this.app = express()
+    Bullboard.setQueues(Queue.instance().queues.map(queue => queue.bull))
     this._middlewares()
     this._routes()
   }
@@ -26,6 +29,7 @@ class Application {
     this.app.use(express.json())
     this.app.use(compression())
     this.app.use(morgan('dev'))
+    this.app.use('/admin/queue', Bullboard.UI)
     // this.app.use(cluster)
   }
 

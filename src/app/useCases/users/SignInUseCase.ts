@@ -5,6 +5,7 @@ import { NotFoundError } from '@helpers/errors/notFoundError'
 import { ServerError } from '@helpers/errors/serverError'
 import { HttpResponse, IHttpResponse } from '@helpers/HttpResponse'
 import { appLogger } from '@helpers/Logger'
+import { Queue } from '@providers/Queue'
 import { IUserRepository } from '@repositories/interfaces/IUserRepository'
 
 interface ISignInDTO{
@@ -43,6 +44,8 @@ export class SignInUseCase {
       const token = Cryptography.generateToken({ id: user.id }, process.env.SIGN_SECRET)
 
       user.password = undefined
+
+      await Queue.instance().add('UserSignUp', { email, name: user.name })
 
       return HttpResponse.created({
         user,

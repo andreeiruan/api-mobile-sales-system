@@ -15,6 +15,17 @@ services:
       - apierp
     volumes:
       - dberp-data:/var/lib/postgresql/data
+  
+  rediserp:
+    image: redis:alpine
+    container_name: rediserp
+    restart: always
+    ports: 
+      - "6379:6379"
+    networks: 
+      - apierp
+    volumes:
+      - rediserp:/data
 
   api:
     build: 
@@ -31,6 +42,7 @@ services:
     restart: always
     depends_on:
       - dberp
+      - rediserp
     networks: 
       - apierp
     command: yarn start:prod
@@ -42,3 +54,4 @@ networks:
 volumes:
   .:
   dberp-data:
+  rediserp:
