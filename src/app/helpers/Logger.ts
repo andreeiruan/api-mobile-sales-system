@@ -46,6 +46,20 @@ class AppLogger {
     }
   }
 
+  logJobError (data: any) {
+    this.logger = winston.createLogger({
+      defaultMeta: { date: new Date().toLocaleString() },
+      transports: [
+        new winston.transports.File({ filename: `${__dirname}/../../temp/logs/jobError.log`, ...this._optionsLog.file })
+      ]
+    })
+
+    this.logger.error(data)
+    if (process.env.NODE_ENV === 'production') {
+      this._awsS3.uploadObj(`${__dirname}/../../temp/logs/error.log`, process.env.BUCKET_LOGS)
+    }
+  }
+
   logWarn (data: any) {
     this.logger = winston.createLogger({
       defaultMeta: { date: new Date().toLocaleString() },

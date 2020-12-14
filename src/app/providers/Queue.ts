@@ -1,4 +1,4 @@
-import Bull from 'bull'
+import Bull, { JobOptions } from 'bull'
 import { redisConfig } from '@config/redis'
 
 import * as Jobs from '../jobs'
@@ -30,9 +30,9 @@ export class Queue {
     return Queue._instance
   }
 
-  add (name: string, data: any) {
+  add (name: string, data: any, opts?: JobOptions) {
     const queue = this.queues.find(queue => queue.name === name)
-    return queue.bull.add(data)
+    return queue.bull.add(data, opts)
   }
 
   process () {
@@ -40,7 +40,11 @@ export class Queue {
       queue.bull.process(queue.handle)
 
       queue.bull.on('failed', (job, err) => {
-        appLogger.logError({ error: { msg: 'Job failed', err: err.message }, name: job.name, data: job.data })
+        appLogger.logJobError({ error: { msg: 'Job failed', err: err.message }, name: job.name, data: job.data })
+      })
+
+      queue.bull.on('completed', (job) => {
+        console.log(`Job id ${job.id} completed`)
       })
     })
   }
