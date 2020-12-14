@@ -1,11 +1,12 @@
 import { Sale } from '@entities/Sale'
 
 export interface IProductSaleDTO{
-  id: string
+  id?: string
   amount: number
   unitaryValue: number
   unitaryDiscount?: number
 }
+
 export interface ISalesAttributes{
   id?: string
   products: IProductSaleDTO[]
