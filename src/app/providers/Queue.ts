@@ -44,7 +44,7 @@ export class Queue {
       })
 
       queue.bull.on('completed', (job) => {
-        console.log(`Job id ${job.id} completed`)
+        appLogger.logInfo({ jobCompleted: job.id })
       })
     })
   }

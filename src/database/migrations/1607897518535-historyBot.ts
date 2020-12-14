@@ -18,6 +18,11 @@ export class historyBot1607897518535 implements MigrationInterface {
           isNullable: false
         },
         {
+          name: 'product',
+          type: 'varchar',
+          isNullable: false
+        },
+        {
           name: 'createdAt',
           type: 'timestamp',
           default: 'now()',

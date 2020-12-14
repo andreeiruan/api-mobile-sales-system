@@ -9,6 +9,9 @@ export class BotHistory {
   @Column('uuid')
   userId: string
 
+  @Column('varchar')
+  product: string
+
   @OneToMany(() => ProductsBotHistory, productsBotHistory => productsBotHistory.botHistory, { eager: true })
   productsBotHistory: ProductsBotHistory[]
 

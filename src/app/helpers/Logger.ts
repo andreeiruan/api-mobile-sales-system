@@ -41,9 +41,7 @@ class AppLogger {
     })
 
     this.logger.error(data)
-    if (process.env.NODE_ENV === 'production') {
-      this._awsS3.uploadObj(`${__dirname}/../../temp/logs/error.log`, process.env.BUCKET_LOGS)
-    }
+    this._awsS3.uploadObj(`${__dirname}/../../temp/logs/error.log`, process.env.BUCKET_LOGS)
   }
 
   logJobError (data: any) {
@@ -55,9 +53,7 @@ class AppLogger {
     })
 
     this.logger.error(data)
-    if (process.env.NODE_ENV === 'production') {
-      this._awsS3.uploadObj(`${__dirname}/../../temp/logs/error.log`, process.env.BUCKET_LOGS)
-    }
+    this._awsS3.uploadObj(`${__dirname}/../../temp/logs/error.log`, process.env.BUCKET_LOGS)
   }
 
   logWarn (data: any) {
@@ -68,9 +64,7 @@ class AppLogger {
       ]
     })
     this.logger.warn(data)
-    if (process.env.NODE_ENV === 'production') {
-      this._awsS3.uploadObj(`${__dirname}/../../temp/logs/warn.log`, process.env.BUCKET_LOGS)
-    }
+    this._awsS3.uploadObj(`${__dirname}/../../temp/logs/warn.log`, process.env.BUCKET_LOGS)
   }
 }
 

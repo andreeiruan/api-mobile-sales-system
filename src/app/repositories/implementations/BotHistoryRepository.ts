@@ -1,12 +1,12 @@
 import { BotHistory } from '@entities/BotHistory'
 import { ProductsBotHistory } from '@entities/ProductsBotHistory'
 import { appLogger } from '@helpers/Logger'
-import { IBotHistoryAttributes, IBotHistoryRepository, IProductBotHistoryDTO } from '@repositories/interfaces/IBotHistory'
+import { IBotHistoryAttributes, IBotHistoryRepository, IProductBotHistoryDTO } from '@repositories/interfaces/IBotHistoryRepository'
 import { getConnection, getRepository } from 'typeorm'
 
 export class BotHistoryRepository implements IBotHistoryRepository {
   async create (data: IBotHistoryAttributes): Promise<BotHistory> {
-    const { userId } = data
+    const { userId, product } = data
 
     const connection = getConnection()
 
@@ -15,7 +15,7 @@ export class BotHistoryRepository implements IBotHistoryRepository {
     try {
       await queryRunner.startTransaction()
 
-      const botHistory = queryRunner.manager.create(BotHistory, { userId })
+      const botHistory = queryRunner.manager.create(BotHistory, { userId, product })
       await queryRunner.manager.save(botHistory)
 
       return botHistory
@@ -37,7 +37,6 @@ export class BotHistoryRepository implements IBotHistoryRepository {
     try {
       await queryRunner.startTransaction()
       for (const p of products) {
-        console.log(p)
         await queryRunner.manager.getRepository(ProductsBotHistory)
           .createQueryBuilder('productsBotHistory')
           .insert()
@@ -58,7 +57,6 @@ export class BotHistoryRepository implements IBotHistoryRepository {
       const botHistory = await repository.findOne({ where: { id: historyId } })
       return botHistory
     } catch (error) {
-      console.log(error)
       await queryRunner.rollbackTransaction()
       appLogger.logError({ error: error.message, filename: __filename })
       throw new Error('Transaction of productsBotHistory has failed')
@@ -66,5 +64,24 @@ export class BotHistoryRepository implements IBotHistoryRepository {
       await queryRunner.commitTransaction()
       await queryRunner.release()
     }
+  }
+
+  async findById (historyId: string): Promise<BotHistory> {
+    const repository = getRepository(BotHistory)
+
+    const botHistory = await repository.findOne({
+      join: { alias: 'botHistory', innerJoinAndSelect: { bt: 'botHistory.productsBotHistory' } },
+      where: { id: historyId }
+    })
+
+    return botHistory
+  }
+
+  async find (userId: string): Promise<BotHistory[]> {
+    const repository = getRepository(BotHistory)
+
+    const botHistorys = await repository.find({ where: { userId: userId } })
+
+    return botHistorys
   }
 }

@@ -13,6 +13,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
     networks: 
       - apierp
+    logging:
+      driver: none
     volumes:
       - dberp-data:/var/lib/postgresql/data
   
@@ -24,6 +26,8 @@ services:
       - "6379:6379"
     networks: 
       - apierp
+    logging:
+      driver: none
     volumes:
       - rediserp:/data
 
@@ -34,7 +38,8 @@ services:
     ports: 
       - "3333:3333"
     env_file: .env
-    environment: 
+    environment:
+      REDIS_HOST: rediserp
       POSTGRES_HOST: dberp
     volumes: 
       - .:/usr/app
@@ -45,7 +50,7 @@ services:
       - rediserp
     networks: 
       - apierp
-    command: yarn start:prod
+    command: yarn start
 
 networks:
   apierp:

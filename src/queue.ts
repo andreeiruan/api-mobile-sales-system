@@ -14,5 +14,4 @@ if (cluster.isMaster) {
 } else {
   const queue = Queue.instance()
   queue.process()
-  console.log('Queue processing')
 }

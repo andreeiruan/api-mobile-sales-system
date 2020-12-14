@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { BotMercadoLivre } from '@app/bots'
 import { BotHistoryRepository } from '@repositories/implementations/BotHistoryRepository'
 import { JobProtocol } from './JobProtocol'
@@ -16,14 +17,16 @@ const botJob: JobProtocol = {
   async handle (data: IBotJobDTO): Promise<any> {
     const { historyId, product } = data.data
 
-    const bot = new BotMercadoLivre({ headless: true, defaultViewport: { width: 1360, height: 720 } })
+    const bot = new BotMercadoLivre({ headless: true, defaultViewport: { width: 1360, height: 720 }, args: ['--no-sandbox'] })
     const productsMercadoLivre = await bot.execute(product)
 
     let products = [...productsMercadoLivre]
     products = products.sort((a, b) => a.price - b.price).slice(0, 5)
 
     const botHistoryRepository = new BotHistoryRepository()
-    await botHistoryRepository.createProducts(products, historyId)
+    const botHistoty = await botHistoryRepository.createProducts(products, historyId)
+
+    await axios.get(`${process.env.API_URL}/api/bot/history/${botHistoty.id}`)
   }
 }
 
