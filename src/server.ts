@@ -2,6 +2,7 @@ import cluster from 'cluster'
 import os from 'os'
 
 import app from './app'
+
 if (cluster.isMaster) {
   for (let i = 0; i < os.cpus().length; i++) {
     cluster.fork()
