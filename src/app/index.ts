@@ -6,6 +6,7 @@ import { routerProducts, routerSales, routerShipment, routerUser, routerBot } fr
 import Bullboard from 'bull-board'
 import { createServer, Server } from 'http'
 import socketIo from 'socket.io'
+import cors from 'cors'
 // import cluster from './middlewares/cluster'
 
 import 'dotenv/config'
@@ -27,6 +28,7 @@ class Application {
   }
 
   private _middlewares () {
+    this.app.use(cors())
     this.app.use((req, res, next) => {
       res.set('X-Powered-By', 'PHP/7.1.7')
       return next()
