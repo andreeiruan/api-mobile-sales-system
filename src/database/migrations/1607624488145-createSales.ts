@@ -31,6 +31,21 @@ export class createSales1607624488145 implements MigrationInterface {
           type: 'boolean'
         },
         {
+          name: 'partialPayment',
+          type: 'boolean',
+          isNullable: false
+        },
+        {
+          name: 'amountPaid',
+          type: 'float',
+          isNullable: true
+        },
+        {
+          name: 'remainingAmount',
+          type: 'float',
+          isNullable: true
+        },
+        {
           name: 'nameCliente',
           type: 'varchar'
         },

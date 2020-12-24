@@ -25,7 +25,7 @@ export class SalesProducts {
   userId: string
 
   @JoinColumn({ name: 'productId' })
-  @ManyToOne(() => Product, product => product.salesProducts)
+  @ManyToOne(() => Product, product => product.salesProducts, { eager: true })
   product: Product
 
   @Column('uuid')
@@ -37,6 +37,15 @@ export class SalesProducts {
 
   @Column('uuid')
   saleId: string
+
+  @Column('boolean')
+  partialPayment: boolean
+
+  @Column('float', { nullable: true })
+  amountPaid: number
+
+  @Column('float', { nullable: true })
+  remainingAmount: number
 
   @CreateDateColumn()
   createdAt: Date

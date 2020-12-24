@@ -15,6 +15,9 @@ export interface ISalesAttributes{
   discount?: number
   userId: string
   confirmPay: boolean
+  partialPayment: boolean
+  amountPaid?: number
+  remainingAmount?: number
   nameCliente: string
   createdAt?: Date
   updatedAt?: Date

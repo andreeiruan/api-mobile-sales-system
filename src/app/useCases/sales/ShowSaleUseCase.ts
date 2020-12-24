@@ -13,13 +13,13 @@ export class ShowSaleUseCase {
 
   async execute (id: string): Promise<IHttpResponse> {
     try {
-      const shipment = await this._saleRepository.findById(id)
-      if (!shipment) {
+      const sale = await this._saleRepository.findById(id)
+      if (!sale) {
         appLogger.logError({ error: `Sale not found by id ${id}` })
         return HttpResponse.notFound(new NotFoundError('Sale'))
       }
 
-      return HttpResponse.ok(shipment)
+      return HttpResponse.ok(sale)
     } catch (error) {
       appLogger.logError({ error: error.message, filename: __filename })
       return HttpResponse.serverError(new ServerError())

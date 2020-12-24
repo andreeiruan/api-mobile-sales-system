@@ -75,7 +75,7 @@ export class SaleRepository implements ISalesRepository {
   async listMonthByUserId (userId:string, month?: number): Promise<Sale[]> {
     const repository = getRepository(Sale)
 
-    const { initial, end } = this.getPeriod(month)
+    const { initial, end } = this.getPeriod(month || new Date().getMonth() + 1)
 
     const sales = await repository.createQueryBuilder('sales')
       .select()
@@ -84,7 +84,18 @@ export class SaleRepository implements ISalesRepository {
       .andWhere('sales.createdAt <= :end', { end: end })
       .execute()
 
-    return sales
+    const salesData = sales.map((d: any) => ({
+      confirmPay: d.sales_confirmPay,
+      createdAt: d.sales_createdAt,
+      discount: d.sales_discount,
+      id: d.sales_id,
+      nameCliente: d.sales_nameCliente,
+      payDate: d.sales_payDate,
+      saleTotal: d.sales_saleTotal,
+      updatedAt: d.sales_updatedAt,
+      userId: d.sales_userId
+    }))
+    return salesData
   }
 
   async findById (id: string): Promise<Sale> {

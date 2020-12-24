@@ -24,11 +24,11 @@ export class CreateSaleUseCase {
 
   async execute (data: ISalesAttributes): Promise<IHttpResponse> {
     try {
-      const { payDate, userId, products, discount, confirmPay, nameCliente } = data
+      const { payDate, userId, products, discount, confirmPay, nameCliente, partialPayment, amountPaid, remainingAmount } = data
       if (!payDate) {
         return HttpResponse.badRequest(new MissingParamError('payDate'))
       }
-      if (!confirmPay) {
+      if (confirmPay === undefined) {
         return HttpResponse.badRequest(new MissingParamError('confirmPay'))
       }
       if (!nameCliente) {
@@ -50,8 +50,18 @@ export class CreateSaleUseCase {
 
       saleTotal -= discount || 0
 
-      const sale = await this._saleRepository.create({ payDate, saleTotal, products, userId, discount, confirmPay, nameCliente })
-      // const sale = { payDate, saleTotal, products, userId, discount, confirmPay, nameCliente }
+      const sale = await this._saleRepository.create({
+        payDate,
+        saleTotal,
+        products,
+        userId,
+        discount,
+        confirmPay,
+        nameCliente,
+        partialPayment,
+        amountPaid,
+        remainingAmount
+      })
 
       return HttpResponse.created(sale)
     } catch (error) {
