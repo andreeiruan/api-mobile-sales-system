@@ -20,7 +20,8 @@ routerProducts.get('/products', auth, async (request, response) => {
     const userId = request.loggedId
     const { name } = request.query
 
-    const { body, statusCode } = await listProductUseCase.execute(userId, `${name}`)
+    // @ts-ignore
+    const { body, statusCode } = await listProductUseCase.execute(userId, name)
     return response.status(statusCode).json(body)
   } catch (error) {
     appLogger.logError({ error: error.message, path: request.path })

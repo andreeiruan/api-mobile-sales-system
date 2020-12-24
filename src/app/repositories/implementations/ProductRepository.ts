@@ -23,8 +23,13 @@ export class ProductRepository implements IProductRepository {
   async listProducts (userId:string, name?: string): Promise<Product[]> {
     const repository = getRepository(Product)
 
-    const products = await repository.find({ where: { userId, name: name ? ILike(`%${name}%`) : ILike('%%') } })
+    if (name) {
+      const products = await repository.find({ where: { userId, name: ILike(`%${name}%`) } })
 
+      return products
+    }
+
+    const products = await repository.find({ where: { userId } })
     return products
   }
 

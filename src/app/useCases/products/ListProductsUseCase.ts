@@ -14,7 +14,7 @@ export class ListProductsUseCase {
     this._productRepository = productRepository
   }
 
-  async execute (userId: string, nameProduct?: string): Promise<IHttpResponse> {
+  async execute (userId: string, nameProduct: string | undefined): Promise<IHttpResponse> {
     try {
       const userExists = await this._userRepository.findById(userId)
       if (!userExists) {
