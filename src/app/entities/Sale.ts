@@ -27,6 +27,15 @@ export class Sale {
   @OneToMany(() => SalesProducts, salesProducts => salesProducts.sale)
   salesProducts: SalesProducts[]
 
+  @Column('boolean')
+  partialPayment: boolean
+
+  @Column('float', { nullable: true })
+  amountPaid: number
+
+  @Column('float', { nullable: true })
+  remainingAmount: number
+
   @CreateDateColumn()
   createdAt: Date
 

@@ -2,6 +2,8 @@ import requests
 import faker
 import random
 import time
+import datetime
+import functools
 
 class PopulateDbErp:
   def __init__(self, baseUrl):
@@ -85,13 +87,31 @@ class PopulateDbErp:
         'amount': amount
       })
 
-    body = {
-      'payDate': '2020-12-11',
+    randomPartial = random.randint(1, 2)
+
+    body = {      
+      'partialPayment': False if randomPartial == 1 else True,
       'products': productsFinal,
       'confirmPay': True,
       'nameCliente': fk.name()
     }
 
+    def valueProducts(product):
+      discount = product['unitaryDiscount']
+      result = product['unitaryValue'] - discount
+      result *= product['amount']
+      return result
+
+    if randomPartial == 2:
+      mapValueProducts = map(valueProducts, productsFinal)
+      saleValue = functools.reduce(lambda a, b: a + b, mapValueProducts)
+      body['amountPaid'] = saleValue - saleValue * 0.3
+      body['remainingAmount'] = saleValue * 0.3
+      body['payDate'] = '2020-01-10'
+    else:
+      body['payDate'] = '2020-12-24'
+
+    print(body)
     response = requests.post(f'{self.baseUrl}/api/sales', headers=self.headers, json=body)
     return response
 
@@ -99,7 +119,7 @@ users = [
   {
     'user': {
       'name': 'Andrei',
-      'email': 'andreeiruan',
+      'email': 'andreeiruan@gmail.com',
       'password': 'teste123'
     },
     'products': [

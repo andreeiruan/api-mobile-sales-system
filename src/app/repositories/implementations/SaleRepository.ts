@@ -15,13 +15,26 @@ export class SaleRepository implements ISalesRepository {
     const connection = getConnection()
 
     const queryRunner = connection.createQueryRunner()
+    const {
+      userId, payDate, products, saleTotal, discount,
+      confirmPay, nameCliente, partialPayment, amountPaid, remainingAmount
+    } = data
 
-    const { userId, payDate, products, saleTotal, discount, confirmPay, nameCliente } = data
     try {
       await queryRunner.startTransaction()
 
       const sumDiscount = products.map(p => p.unitaryDiscount).reduce((s, n) => s + n)
-      const sale = queryRunner.manager.create(Sale, { payDate, saleTotal, discount: discount || 0 + sumDiscount, userId, confirmPay, nameCliente })
+      const sale = queryRunner.manager.create(Sale, {
+        payDate,
+        saleTotal,
+        discount: discount || 0 + sumDiscount,
+        userId,
+        confirmPay,
+        nameCliente,
+        partialPayment,
+        amountPaid,
+        remainingAmount
+      })
       await queryRunner.manager.save(sale)
 
       for (const p of products) {
@@ -53,7 +66,7 @@ export class SaleRepository implements ISalesRepository {
     } catch (error) {
       await queryRunner.rollbackTransaction()
       appLogger.logError({ error: error.message, filename: __filename })
-      throw new Error('Transaction of shipment has failed')
+      throw new Error('Transaction of sale has failed')
     } finally {
       await queryRunner.commitTransaction()
       await queryRunner.release()
@@ -93,8 +106,12 @@ export class SaleRepository implements ISalesRepository {
       payDate: d.sales_payDate,
       saleTotal: d.sales_saleTotal,
       updatedAt: d.sales_updatedAt,
-      userId: d.sales_userId
+      userId: d.sales_userId,
+      partialPayment: d.sales_partialPayment,
+      amountPaid: d.sales_amountPaid,
+      remainingAmount: d.sales_remainingAmount
     }))
+
     return salesData
   }
 

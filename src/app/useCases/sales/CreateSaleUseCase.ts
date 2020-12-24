@@ -35,6 +35,10 @@ export class CreateSaleUseCase {
         return HttpResponse.badRequest(new MissingParamError('nameCliente'))
       }
 
+      if (partialPayment === undefined) {
+        return HttpResponse.badRequest(new MissingParamError('partialPayment'))
+      }
+
       if (!products || products.length === 0) {
         return HttpResponse.badRequest(new MissingParamError('Products'))
       }
@@ -65,7 +69,6 @@ export class CreateSaleUseCase {
 
       return HttpResponse.created(sale)
     } catch (error) {
-      console.log(error)
       appLogger.logError({ error: error.message, filename: __filename, params: { ...data } })
       return HttpResponse.serverError(new ServerError())
     }
