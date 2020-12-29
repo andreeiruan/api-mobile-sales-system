@@ -43,9 +43,11 @@ export class SignUpUseCase {
 
       user.password = undefined
 
+      const token = Cryptography.generateToken({ id: user.id }, process.env.SIGN_SECRET)
+
       await Queue.instance().add('UserSignUp', { email, name })
 
-      return HttpResponse.created(user)
+      return HttpResponse.created({ user, token })
     } catch (error) {
       appLogger.logError({ error: error.message, filename: __filename })
       return HttpResponse.serverError(new ServerError())
