@@ -17,6 +17,10 @@ export class createdeliveries1608816963756 implements MigrationInterface {
         isNullable: false
       },
       {
+        name: 'deliveried',
+        type: 'boolean'
+      },
+      {
         name: 'productId',
         type: 'uuid',
         isNullable: false
