@@ -24,18 +24,22 @@ export class ListSalesUseCase {
 
       const sales = await this._saleRepository.listMonthByUserId(userId, month)
 
-      const amountSale = sales.map(s => s.saleTotal).reduce((s, n) => s + n)
+      if (sales.length > 0) {
+        const amountSale = sales.map(s => s.saleTotal).reduce((s, n) => s + n)
 
-      const daysSales = sales.map(s => s.createdAt).map(d => d.getDate())
-      const listDays = daysSales.filter((d, i) => daysSales.indexOf(d) === i)
+        const daysSales = sales.map(s => s.createdAt).map(d => d.getDate())
+        const listDays = daysSales.filter((d, i) => daysSales.indexOf(d) === i)
 
-      const salesPerDay = {}
+        const salesPerDay = {}
 
-      listDays.forEach(d => {
-        salesPerDay[d] = sales.filter(s => s.createdAt.getDate() === d)
-      })
+        listDays.forEach(d => {
+          salesPerDay[d] = sales.filter(s => s.createdAt.getDate() === d)
+        })
 
-      return HttpResponse.ok({ sales: salesPerDay, amountSale })
+        return HttpResponse.ok({ sales: salesPerDay, amountSale })
+      }
+
+      return HttpResponse.ok({ sales: [], amountSale: 0 })
     } catch (error) {
       appLogger.logError({ error: error.message, filename: __filename, params: { userId, month } })
       return HttpResponse.serverError(new ServerError())
