@@ -24,7 +24,11 @@ export class CreateSaleUseCase {
 
   async execute (data: ISalesAttributes): Promise<IHttpResponse> {
     try {
-      const { payDate, userId, products, discount, confirmPay, nameCliente, partialPayment, amountPaid, remainingAmount } = data
+      const {
+        payDate, userId, products, discount, confirmPay, nameCliente,
+        partialPayment, amountPaid, remainingAmount
+      } = data
+
       if (!payDate) {
         return HttpResponse.badRequest(new MissingParamError('payDate'))
       }
@@ -37,6 +41,12 @@ export class CreateSaleUseCase {
 
       if (partialPayment === undefined) {
         return HttpResponse.badRequest(new MissingParamError('partialPayment'))
+      }
+
+      if (partialPayment === true) {
+        if (!amountPaid || !remainingAmount) {
+          return HttpResponse.badRequest(new MissingParamError('AmountPaid or RemainingAmount'))
+        }
       }
 
       if (!products || products.length === 0) {
