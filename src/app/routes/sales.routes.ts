@@ -34,8 +34,8 @@ routerSales.post('/sales', auth, async (request, response) => {
 routerSales.get('/sales', auth, async (request, response) => {
   try {
     const userId = request.loggedId
-    const { month } = request.query
-    const { statusCode, body } = await listSaleUseCase.execute(userId, Number(month) - 1)
+    const { month, year } = request.query
+    const { statusCode, body } = await listSaleUseCase.execute(userId, Number(month) - 1, Number(year))
     return response.status(statusCode).json(body)
   } catch (error) {
     appLogger.logError({ error: error.message, path: request.path })

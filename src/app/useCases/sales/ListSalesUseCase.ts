@@ -14,7 +14,7 @@ export class ListSalesUseCase {
     this._saleRepository = saleRepository
   }
 
-  async execute (userId: string, month: number): Promise<IHttpResponse> {
+  async execute (userId: string, month: number, year: number): Promise<IHttpResponse> {
     try {
       const userExists = await this._userRepository.findById(userId)
       if (!userExists) {
@@ -22,7 +22,7 @@ export class ListSalesUseCase {
         return HttpResponse.notFound(new NotFoundError('User'))
       }
 
-      const sales = await this._saleRepository.listMonthByUserId(userId, month)
+      const sales = await this._saleRepository.listMonthByUserId(userId, month, year)
 
       if (sales.length > 0) {
         const amountSale = sales.map(s => s.saleTotal).reduce((s, n) => s + n)

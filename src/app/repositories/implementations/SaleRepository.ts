@@ -73,9 +73,11 @@ export class SaleRepository implements ISalesRepository {
     }
   }
 
-  private getPeriod (m: number): IPeriod {
+  private getPeriod (m: number, year: number): IPeriod {
     let date: any = new Date().setMonth(m)
+    date = new Date(date).setFullYear(year)
     date = new Date(date)
+
     const initial = new Date(date.getFullYear(), date.getMonth(), 1)
     const end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
@@ -85,10 +87,10 @@ export class SaleRepository implements ISalesRepository {
     }
   }
 
-  async listMonthByUserId (userId:string, month?: number): Promise<Sale[]> {
+  async listMonthByUserId (userId:string, month?: number, year?: number): Promise<Sale[]> {
     const repository = getRepository(Sale)
 
-    const { initial, end } = this.getPeriod(month || new Date().getMonth() + 1)
+    const { initial, end } = this.getPeriod(month, year)
 
     const sales = await repository.createQueryBuilder('sales')
       .select()
