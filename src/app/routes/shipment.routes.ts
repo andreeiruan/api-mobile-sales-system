@@ -20,8 +20,8 @@ routerShipment.post('/shipments', auth, async (request, response) => {
 routerShipment.get('/shipments', auth, async (request, response) => {
   try {
     const userId = request.loggedId
-    const { month } = request.query
-    const { body, statusCode } = await listShipmentUseCase.execute(userId, Number(month) - 1)
+    const { month, year } = request.query
+    const { body, statusCode } = await listShipmentUseCase.execute(userId, Number(month) - 1, Number(year))
     return response.status(statusCode).json(body)
   } catch (error) {
     appLogger.logError({ error: error.message, path: request.path })

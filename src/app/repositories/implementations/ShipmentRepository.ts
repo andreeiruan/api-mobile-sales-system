@@ -60,9 +60,11 @@ export class ShipmentRepostory implements IShipmentRepository {
     }
   }
 
-  private getPeriod (m: number): IPeriod {
+  private getPeriod (m: number, year: number): IPeriod {
     let date: any = new Date().setMonth(m)
+    date = new Date(date).setFullYear(year)
     date = new Date(date)
+
     const initial = new Date(date.getFullYear(), date.getMonth(), 1)
     const end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
@@ -72,8 +74,8 @@ export class ShipmentRepostory implements IShipmentRepository {
     }
   }
 
-  async listMonthByUserId (userId:string, month: number): Promise<Shipment[]> {
-    const { initial, end } = this.getPeriod(month)
+  async listMonthByUserId (userId:string, month: number, year: number): Promise<Shipment[]> {
+    const { initial, end } = this.getPeriod(month, year)
 
     const repository = getRepository(Shipment)
 
@@ -84,7 +86,16 @@ export class ShipmentRepostory implements IShipmentRepository {
       .andWhere('shipments.createdAt <= :end', { end: end })
       .execute()
 
-    return shipments
+    const shipmentsData = shipments.map(s => ({
+      id: s.shipments_id,
+      userId: s.shipments_userId,
+      amountValue: s.shipments_amountValue,
+      provider: s.shipments_provider,
+      createdAt: s.shipments_createdAt,
+      updatedAt: s.shipments_updatedAt
+    }))
+
+    return shipmentsData
   }
 
   async findById (id: string): Promise<Shipment> {

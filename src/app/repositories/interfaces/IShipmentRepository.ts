@@ -18,6 +18,6 @@ export interface IShipmentAttributes{
 
 export interface IShipmentRepository{
   create(data: IShipmentAttributes): Promise<Shipment>
-  listMonthByUserId(userId:string, month?: number): Promise<Shipment[]>
+  listMonthByUserId(userId:string, month: number, year: number): Promise<Shipment[]>
   findById(id: string): Promise<Shipment>
 }

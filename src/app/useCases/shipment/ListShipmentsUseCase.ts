@@ -15,7 +15,7 @@ export class ListShipmentsUseCase {
     this._shipmentRepository = shipmentRepository
   }
 
-  async execute (userId: string, month: number): Promise<IHttpResponse> {
+  async execute (userId: string, month: number, year: number): Promise<IHttpResponse> {
     try {
       const userExists = this._userRepository.findById(userId)
       if (!userExists) {
@@ -23,7 +23,7 @@ export class ListShipmentsUseCase {
         return HttpResponse.notFound(new NotFoundError('User'))
       }
 
-      const shipments = await this._shipmentRepository.listMonthByUserId(userId, month)
+      const shipments = await this._shipmentRepository.listMonthByUserId(userId, month, year)
 
       return HttpResponse.ok(shipments)
     } catch (error) {
