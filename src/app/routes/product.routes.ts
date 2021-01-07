@@ -1,5 +1,5 @@
 import { appLogger } from '@helpers/Logger'
-import { createProductUseCase, listProductUseCase, showProductUseCase } from '@useCases/products'
+import { createProductUseCase, listProductUseCase, showProductUseCase, updateProductUseCase } from '@useCases/products'
 import { Router } from 'express'
 import auth from '../middlewares/authentication'
 
@@ -34,6 +34,19 @@ routerProducts.get('/products/:id', auth, async (request, response) => {
     const { id } = request.params
 
     const { body, statusCode } = await showProductUseCase.execute(id)
+    return response.status(statusCode).json(body)
+  } catch (error) {
+    appLogger.logError({ error: error.message, path: request.path })
+    return response.status(500).json({ error: 'Unexpected error' })
+  }
+})
+
+routerProducts.patch('/products/:id', auth, async (request, response) => {
+  try {
+    const { id } = request.params
+    const { name, saleValue } = request.body
+
+    const { body, statusCode } = await updateProductUseCase.execute({ id, name, saleValue })
     return response.status(statusCode).json(body)
   } catch (error) {
     appLogger.logError({ error: error.message, path: request.path })

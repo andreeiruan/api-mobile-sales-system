@@ -9,8 +9,8 @@ const commonConfig = {
   port: 5432,
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
-  database: POSTGRES_DB,
-  logging: true
+  database: POSTGRES_DB
+  // logging: true
 }
 
 const srcConfig = {

@@ -1,5 +1,5 @@
 import { Product } from '@entities/Product'
-import { IProductAttributes, IProductRepository } from '@repositories/interfaces/IProductRepository'
+import { IProductAttributes, IProductRepository, UpdateProductDTO } from '@repositories/interfaces/IProductRepository'
 import { getRepository, ILike } from 'typeorm'
 
 export class ProductRepository implements IProductRepository {
@@ -37,6 +37,25 @@ export class ProductRepository implements IProductRepository {
     const repository = getRepository(Product)
 
     const product = await repository.findOne({ where: { id } })
+
+    return product
+  }
+
+  async updateProduct (data: UpdateProductDTO): Promise<Product> {
+    const repository = getRepository(Product)
+    const { name, saleValue, id } = data
+
+    const product = await repository.findOne({ where: { id } })
+
+    if (name && product.name !== name) {
+      product.name = name
+    }
+
+    if (saleValue && product.saleValue !== saleValue) {
+      product.saleValue = saleValue
+    }
+
+    await repository.save(product)
 
     return product
   }

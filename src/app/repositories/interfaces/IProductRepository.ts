@@ -11,9 +11,16 @@ export interface IProductAttributes{
   updatedAt?: Date
 }
 
+export interface UpdateProductDTO{
+  id: string
+  name: string
+  saleValue: number
+}
+
 export interface IProductRepository{
   create(data: IProductAttributes): Promise<Product>
   findByUserIdAndName (userId: string, name: string): Promise<Product>
   findById (id: string): Promise<Product>
   listProducts(userId:string, name?: string): Promise<Product[]>
+  updateProduct(data: UpdateProductDTO): Promise<Product>
 }
