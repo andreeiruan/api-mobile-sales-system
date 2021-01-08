@@ -23,8 +23,14 @@ export interface ISalesAttributes{
   updatedAt?: Date
 }
 
+export interface ReportSale{
+  amountValue: number
+  numberSales: number
+}
+
 export interface ISalesRepository{
   create(data: ISalesAttributes): Promise<Sale>
   listMonthByUserId(userId:string, month?: number, year?: number): Promise<Sale[]>
   findById(id: string): Promise<Sale>
+  getValueSoldMonth(userId: string, month: number, year: number): Promise<ReportSale>
 }

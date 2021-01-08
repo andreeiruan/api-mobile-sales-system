@@ -1,14 +1,10 @@
 import { Product } from '@entities/Product'
 import { Sale } from '@entities/Sale'
 import { SalesProducts } from '@entities/SaleProducts'
+import { getPeriod } from '@helpers/getPeriod'
 import { appLogger } from '@helpers/Logger'
-import { ISalesAttributes, ISalesRepository } from '@repositories/interfaces/ISalesRepository'
+import { ISalesAttributes, ISalesRepository, ReportSale } from '@repositories/interfaces/ISalesRepository'
 import { getConnection, getRepository } from 'typeorm'
-
-interface IPeriod{
-  initial: Date
-  end: Date
-}
 
 export class SaleRepository implements ISalesRepository {
   async create (data: ISalesAttributes): Promise<Sale> {
@@ -73,24 +69,10 @@ export class SaleRepository implements ISalesRepository {
     }
   }
 
-  private getPeriod (m: number, year: number): IPeriod {
-    let date: any = new Date().setMonth(m)
-    date = new Date(date).setFullYear(year)
-    date = new Date(date)
-
-    const initial = new Date(date.getFullYear(), date.getMonth(), 1)
-    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-
-    return {
-      initial,
-      end
-    }
-  }
-
   async listMonthByUserId (userId:string, month?: number, year?: number): Promise<Sale[]> {
     const repository = getRepository(Sale)
 
-    const { initial, end } = this.getPeriod(month, year)
+    const { initial, end } = getPeriod(month, year)
 
     const sales = await repository.createQueryBuilder('sales')
       .select()
@@ -126,5 +108,25 @@ export class SaleRepository implements ISalesRepository {
     })
 
     return sale
+  }
+
+  async getValueSoldMonth (userId: string, month: number, year: number): Promise<ReportSale> {
+    const repository = getRepository(Sale)
+    const { initial, end } = getPeriod(month, year)
+    const { sum } = await repository.createQueryBuilder('sales')
+      .select('SUM(sales.saleTotal)', 'sum')
+      .where('sales.userId = :id', { id: userId })
+      .andWhere('sales.createdAt >= :initial', { initial: initial })
+      .andWhere('sales.createdAt <= :end', { end: end })
+      .getRawOne()
+
+    const numberSales = await repository.createQueryBuilder('sales')
+      .select()
+      .where('sales.userId = :id', { id: userId })
+      .andWhere('sales.createdAt >= :initial', { initial: initial })
+      .andWhere('sales.createdAt <= :end', { end: end })
+      .getCount()
+
+    return { amountValue: sum, numberSales }
   }
 }

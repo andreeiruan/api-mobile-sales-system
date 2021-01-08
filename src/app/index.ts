@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express from 'express'
 import compression from 'compression'
 import morgan from 'morgan'
-import { routerProducts, routerSales, routerShipment, routerUser, routerBot } from './routes'
+import { routerProducts, routerSales, routerShipment, routerUser, routerBot, routerReport } from './routes'
 import Bullboard from 'bull-board'
 import { createServer, Server } from 'http'
 import socketIo from 'socket.io'
@@ -46,6 +46,7 @@ class Application {
     this.app.use('/api', routerShipment)
     this.app.use('/api', routerSales)
     this.app.use('/api', routerBot)
+    this.app.use('/api', routerReport)
   }
 
   private _socket () {

@@ -16,8 +16,14 @@ export interface IShipmentAttributes{
   updatedAt?: Date
 }
 
+export interface ReportSimpleShimpment{
+  amountValue: number
+  numberPurchases: number
+}
+
 export interface IShipmentRepository{
   create(data: IShipmentAttributes): Promise<Shipment>
   listMonthByUserId(userId:string, month: number, year: number): Promise<Shipment[]>
   findById(id: string): Promise<Shipment>
+  getValuePurchasesMonth(userId: string, month: number, year: number): Promise<ReportSimpleShimpment>
 }
